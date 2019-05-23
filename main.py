@@ -10,12 +10,9 @@
 #                                                                              #
 # **************************************************************************** #
 
-import numpy as np
-import gym
 import sys
 
-env = gym.make('Marvin-v0')
-print(env)
+from marvin.model import Marvin
 
 
 def main(args):
@@ -26,6 +23,19 @@ def main(args):
         print("--load [file]: Skip training process and train using weights in file argument")
         print("--save [file]: Save weights to file argument after running the program")
         exit()
+
+    marvin = Marvin()
+
+    # load weights if file path given, otherwise train marvin starting with random weights
+    if 'load' in args.keys():
+        marvin.load_weights(args['load'])
+    elif 'walk' not in args.keys():
+        marvin.train(episodes=1000, batch=20)
+
+    marvin.walk(100)
+
+    if 'save' in args.keys():
+        marvin.save_weights(args['save'])
 
     print(args)
 
@@ -48,7 +58,7 @@ if __name__ == '__main__':
                 args['help'] = True
             else:
                 args[sys.argv[i][2:]] = sys.argv[i + 1]
-            i += 1
+                i += 1
         else:
             print("ERROR: Invalid argument found: {}".format(sys.argv[i]))
             args['help'] = True
