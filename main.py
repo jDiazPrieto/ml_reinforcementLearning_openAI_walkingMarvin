@@ -12,7 +12,7 @@
 
 import sys
 
-from marvin.model import Marvin
+from marvin.model import WalkingMarvin
 
 
 def main(args):
@@ -24,15 +24,26 @@ def main(args):
         print("--save [file]: Save weights to file argument after running the program")
         exit()
 
-    marvin = Marvin()
+    marvin = WalkingMarvin()
+    print("Action space")
+    print(marvin.env.action_space)
+
+    for _ in range(10):
+        marvin.env.render()
+        state, reward, done, _ = marvin.env.step(marvin.env.action_space.sample())  # take a random action
+        print("--- state ---")
+        print(state)
+        print("--- reward ---")
+        print(reward)
+    marvin.env.close()
 
     # load weights if file path given, otherwise train marvin starting with random weights
     if 'load' in args.keys():
         marvin.load_weights(args['load'])
     elif 'walk' not in args.keys():
-        marvin.train(episodes=1000, batch=20)
+        marvin.train(episodes=50, batch=20)
 
-    marvin.walk(100)
+    marvin.walk(10)
 
     if 'save' in args.keys():
         marvin.save_weights(args['save'])

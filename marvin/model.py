@@ -14,8 +14,7 @@ import numpy as np
 import gym
 
 
-class Marvin:
-
+class WalkingMarvin:
     def __init__(self, lr=0.01):
         self.env = gym.make('Marvin-v0')
         # substitute weights with a separate class for a neural network
@@ -46,11 +45,17 @@ class Marvin:
                 self.total_rewards.append(rewards)
 
             print("average rewards for episode {}: {}".format(i,
-                    sum(self.batch_rewards) / len(self.batch_rewards)))
+                    sum(self.batch_rewards) / (len(self.batch_rewards) + 1)))
             # discount rewards after batch is done, update weights
             self.discount_rewards()
             self.update_weights()
         print("---- Finished training ----")
+
+    def discount_rewards(self):
+        return 0
+
+    def update_weights(self):
+        return 0
 
     def walk(self, num_episodes=100):
         print("----Begin Walking----")
